@@ -1,3 +1,5 @@
+require('dotenv').config(); // ← ESTA LÍNEA ES CRUCIAL
+
 const mysql = require('mysql2');
 
 const pool = mysql.createPool({
