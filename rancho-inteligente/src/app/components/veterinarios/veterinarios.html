@@ -1,0 +1,89 @@
+<h2><i class="fa-solid fa-user-doctor"></i> Directorio de Veterinarios</h2>
+<p class="text-muted">Total registrados: <strong>{{ listaVeterinarios.length }}</strong></p>
+
+<!-- Formulario -->
+<div class="card mb-3" [class.border-warning]="editando" [class.border-primary]="!editando">
+  <div class="card-header text-white" [class.bg-warning]="editando" [class.bg-primary]="!editando">
+    <h5 class="mb-0">
+      @if (editando) {
+        <i class="fa-solid fa-pen-to-square"></i> Editando: {{ vetForm.nombre }}
+      } @else {
+        <i class="fa-solid fa-plus-circle"></i> Nuevo Veterinario
+      }
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Nombre completo" [(ngModel)]="vetForm.nombre">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Teléfono" [(ngModel)]="vetForm.telefono">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Especialidad" [(ngModel)]="vetForm.especialidad">
+      </div>
+      <div class="col-md-2">
+        <input type="number" class="form-control" placeholder="Sueldo" [(ngModel)]="vetForm.sueldo">
+      </div>
+      <div class="col-md-3">
+        @if (editando) {
+          <button class="btn btn-warning me-2" (click)="guardar()" [disabled]="guardando">
+            <i class="fa-solid fa-floppy-disk"></i> Actualizar
+          </button>
+          <button class="btn btn-secondary" (click)="cancelar()" [disabled]="guardando">
+            <i class="fa-solid fa-xmark"></i> Cancelar
+          </button>
+        } @else {
+          <button class="btn btn-primary" (click)="guardar()" [disabled]="guardando">
+            <i class="fa-solid fa-floppy-disk"></i> {{ guardando ? 'Guardando...' : 'Guardar' }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla -->
+<div class="card shadow-sm">
+  <table class="table table-striped table-hover mb-0">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Especialidad</th>
+        <th>Sueldo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (vet of listaVeterinarios; track vet.id) {
+        <tr>
+          <td>{{ vet.id }}</td>
+          <td class="fw-bold">{{ vet.nombre }}</td>
+          <td>{{ vet.telefono }}</td>
+          <td><span class="badge bg-info">{{ vet.especialidad }}</span></td>
+          <td [class.text-success]="vet.sueldo > 25000" [class.fw-bold]="vet.sueldo > 25000">
+          ${{ vet.sueldo }}
+          </td>
+          <td>
+            <button class="btn btn-warning btn-sm me-1" (click)="editar(vet)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="eliminar(vet.id)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">
+            <i class="fa-solid fa-inbox fa-2x mb-2"></i><br>
+            No hay veterinarios registrados
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

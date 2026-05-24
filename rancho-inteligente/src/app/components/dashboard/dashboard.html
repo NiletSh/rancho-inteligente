@@ -1,0 +1,222 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2><i class="fa-solid fa-gauge-high text-success me-2"></i> Dashboard del Rancho</h2>
+      <p class="text-muted mb-0">Panel de control administrativo</p>
+    </div>
+    <button class="btn btn-danger" (click)="descargarPDF()">
+      <i class="fa-solid fa-file-pdf me-2"></i> Descargar Reporte PDF
+    </button>
+  </div>
+
+  @if (cargando) {
+    <div class="alert alert-info text-center">
+      <i class="fa-solid fa-spinner fa-spin me-2"></i>
+      Cargando dashboard...
+    </div>
+  }
+
+  @if (errorCarga) {
+    <div class="alert alert-danger">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>
+      {{ errorCarga }}
+    </div>
+  }
+
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-success shadow-sm h-100 stat-card">
+        <div class="card-body text-center">
+          <i class="fa-solid fa-cow fa-3x mb-2 opacity-75"></i>
+          <h5 class="card-title">Animales</h5>
+          <h2 class="display-5 fw-bold">{{ stats.totalAnimales }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-primary shadow-sm h-100 stat-card">
+        <div class="card-body text-center">
+          <i class="fa-solid fa-user-doctor fa-3x mb-2 opacity-75"></i>
+          <h5 class="card-title">Veterinarios</h5>
+          <h2 class="display-5 fw-bold">{{ stats.totalVeterinarios }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-danger shadow-sm h-100 stat-card">
+        <div class="card-body text-center">
+          <i class="fa-solid fa-syringe fa-3x mb-2 opacity-75"></i>
+          <h5 class="card-title">Vacunas</h5>
+          <h2 class="display-5 fw-bold">{{ stats.totalVacunas }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning shadow-sm h-100 stat-card">
+        <div class="card-body text-center">
+          <i class="fa-solid fa-boxes-stacked fa-3x mb-2 opacity-75"></i>
+          <h5 class="card-title">Inventario</h5>
+          <h2 class="display-5 fw-bold">{{ stats.totalInventario }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fa-solid fa-chart-column text-success me-2"></i>Vacunas Aplicadas por Mes</h5>
+        </div>
+        <div class="card-body">
+          <canvas
+            baseChart
+            [data]="barChartData"
+            [type]="'bar'"
+            [options]="{ responsive: true, maintainAspectRatio: false }"
+            style="max-height: 300px;">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>Ganado por Especie</h5>
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center">
+          <canvas
+            baseChart
+            [data]="donutChartData"
+            [type]="'doughnut'"
+            [options]="{ responsive: true, maintainAspectRatio: false }"
+            style="max-height: 250px;">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-warning h-100">
+        <div class="card-header bg-warning text-white">
+          <h5 class="mb-0">
+            <i class="fa-solid fa-calendar-day me-2"></i>
+            Vacunas Pendientes
+            <span class="badge bg-white text-warning ms-2">{{ proximasVacunas.length }}</span>
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            @if (cargando) {
+              <li class="list-group-item text-center text-muted py-4">
+                <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                Cargando vacunas...
+              </li>
+            } @else {
+              @for (v of proximasVacunas; track v.id) {
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style="width: 45px; height: 45px;">
+                      <i class="fa-solid fa-syringe"></i>
+                    </div>
+                    <div>
+                      <strong class="d-block">{{ v.vacuna }}</strong>
+                      <small class="text-muted">
+                        <i class="fa-solid fa-cow me-1"></i>{{ v.animal }}
+                        <span class="mx-1">|</span>
+                        <i class="fa-solid fa-user-doctor me-1"></i>{{ v.veterinario }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="text-end">
+                    <span
+                      class="badge"
+                      [class.bg-danger]="esVacunaVencida(v.proxima_dosis) || esVacunaUrgente(v.proxima_dosis)"
+                      [class.bg-warning]="esVacunaProxima(v.proxima_dosis)"
+                      [class.bg-success]="esVacunaProgramada(v.proxima_dosis)">
+                      {{ textoEstadoVacuna(v.proxima_dosis) }}
+                    </span>
+                    <small class="d-block text-muted mt-1">
+                      {{ v.proxima_dosis | date:'dd/MM/yyyy' }}
+                    </small>
+                  </div>
+                </li>
+              } @empty {
+                <li class="list-group-item text-center text-muted py-4">
+                  <i class="fa-solid fa-calendar-check fa-2x mb-2"></i><br>
+                  No hay vacunas pendientes
+                </li>
+              }
+            }
+          </ul>
+        </div>
+        <div class="card-footer bg-light">
+          <small class="text-muted">
+            <i class="fa-solid fa-circle text-danger me-1"></i>Vencida/Urgente
+            <i class="fa-solid fa-circle text-warning mx-1"></i>Proxima
+            <i class="fa-solid fa-circle text-success ms-1"></i>Programada
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fa-solid fa-list text-success me-2"></i>Ultimos Animales Registrados</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Animal</th>
+                  <th>Especie</th>
+                  <th>Raza</th>
+                  <th>Edad</th>
+                  <th>Peso</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (cargando) {
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-3">
+                      <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                      Cargando animales...
+                    </td>
+                  </tr>
+                } @else {
+                  @for (animal of stats.ultimosAnimales || []; track animal.id) {
+                    <tr>
+                      <td>{{ animal.id }}</td>
+                      <td>
+                        <img [src]="animal.foto" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
+                        {{ animal.nombre }}
+                      </td>
+                      <td>{{ animal.especie }}</td>
+                      <td><span class="badge bg-secondary">{{ animal.raza }}</span></td>
+                      <td>{{ animal.edad }} anos</td>
+                      <td class="fw-bold">{{ animal.peso }} kg</td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-3">
+                        No hay animales registrados
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

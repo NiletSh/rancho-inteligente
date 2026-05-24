@@ -1,0 +1,85 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="fa-solid fa-user-tie"></i> Rancheros / Dueños</h2>
+  <span class="badge bg-primary fs-5">Total: {{ listaRancheros.length }}</span>
+</div>
+
+<!-- Formulario -->
+<div class="card mb-4" [class.border-warning]="editando" [class.border-primary]="!editando">
+  <div class="card-header text-white" [class.bg-warning]="editando" [class.bg-primary]="!editando">
+    <h5 class="mb-0">
+      @if (editando) {
+        <i class="fa-solid fa-pen-to-square"></i> Editando: {{ ranchForm.nombre }}
+      } @else {
+        <i class="fa-solid fa-plus-circle"></i> Nuevo Ranchero
+      }
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Nombre completo" [(ngModel)]="ranchForm.nombre">
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Teléfono / Contacto" [(ngModel)]="ranchForm.contacto">
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Dirección del rancho" [(ngModel)]="ranchForm.direccion">
+      </div>
+      <div class="col-md-2">
+        @if (editando) {
+          <button class="btn btn-warning me-2" (click)="guardar()" [disabled]="guardando">
+            <i class="fa-solid fa-floppy-disk"></i> Actualizar
+          </button>
+          <button class="btn btn-secondary" (click)="cancelar()" [disabled]="guardando">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        } @else {
+          <button class="btn btn-primary" (click)="guardar()" [disabled]="guardando">
+            <i class="fa-solid fa-floppy-disk"></i> {{ guardando ? 'Guardando...' : 'Guardar' }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cards -->
+<div class="row">
+  @for (r of listaRancheros; track r.id) {
+    <div class="col-md-6 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 50px; height: 50px;">
+              <i class="fa-solid fa-user-tie fa-lg"></i>
+            </div>
+            <div>
+              <h5 class="card-title mb-0">{{ r.nombre }}</h5>
+              <small class="text-muted">ID: {{ r.id }}</small>
+            </div>
+          </div>
+          <p class="card-text">
+            <i class="fa-solid fa-phone me-2 text-success"></i> {{ r.contacto }}<br>
+            <i class="fa-solid fa-location-dot me-2 text-danger"></i> {{ r.direccion }}
+          </p>
+        </div>
+        <div class="card-footer bg-white text-end">
+          <button class="btn btn-warning btn-sm me-1" (click)="editar(r)">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="eliminar(r.id)">
+            <i class="fa-solid fa-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <div class="col-12">
+      <div class="alert alert-warning text-center">
+        <i class="fa-solid fa-users-slash fa-2x mb-2"></i><br>
+        No hay rancheros registrados
+      </div>
+    </div>
+  }
+</div>

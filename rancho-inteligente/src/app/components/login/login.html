@@ -1,0 +1,36 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="card shadow-lg border-0">
+      <div class="card-header bg-success text-white text-center py-4">
+        <h3><i class="fa-solid fa-cow fa-2x mb-2"></i></h3>
+        <h4>RANCHO INTELIGENTE</h4>
+        <small>Sistema de Gestión Ganadera</small>
+      </div>
+      <div class="card-body p-4">
+        @if (error) {
+          <div class="alert alert-danger text-center">
+            <i class="fa-solid fa-triangle-exclamation"></i> Usuario o contraseña incorrectos
+          </div>
+        }
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">
+            <i class="fa-solid fa-user me-1"></i> Usuario
+          </label>
+          <input type="text" class="form-control" [(ngModel)]="usuario" placeholder="admin, veterinario, empleado">
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">
+            <i class="fa-solid fa-lock me-1"></i> Contraseña
+          </label>
+          <input type="password" class="form-control" [(ngModel)]="password" placeholder="Contraseña">
+        </div>
+        
+        <button class="btn btn-success w-100 py-2 fw-bold" (click)="ingresar()">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar al Sistema
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

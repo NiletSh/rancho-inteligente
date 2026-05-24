@@ -1,0 +1,85 @@
+@if (mostrarMenu) {
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2d5016;">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fa-solid fa-tractor me-2"></i> Rancho Inteligente
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuRancho">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="menuRancho">
+        <ul class="navbar-nav me-auto">
+          
+          <!-- ADMIN ve TODO -->
+          @if (rolActual === 'ADMIN') {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/dashboard"><i class="fa-solid fa-gauge-high me-1"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/ganado"><i class="fa-solid fa-cow me-1"></i> Ganado</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/vacunas"><i class="fa-solid fa-syringe me-1"></i> Vacunas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/alimentacion"><i class="fa-solid fa-wheat-awn me-1"></i> Alimentación</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/veterinarios"><i class="fa-solid fa-user-doctor me-1"></i> Veterinarios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/inventario"><i class="fa-solid fa-boxes-stacked me-1"></i> Inventario</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/rancheros"><i class="fa-solid fa-user-tie me-1"></i> Rancheros</a>
+            </li>
+          }
+          
+          <!-- VETERINARIO ve: Ganado, Vacunas -->
+          @if (rolActual === 'VETERINARIO') {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/ganado"><i class="fa-solid fa-cow me-1"></i> Ganado</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/vacunas"><i class="fa-solid fa-syringe me-1"></i> Vacunas</a>
+            </li>
+          }
+          
+          <!-- EMPLEADO ve: Alimentación, Inventario -->
+          @if (rolActual === 'EMPLEADO') {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/alimentacion"><i class="fa-solid fa-wheat-awn me-1"></i> Alimentación</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/inventario"><i class="fa-solid fa-boxes-stacked me-1"></i> Inventario</a>
+            </li>
+          }
+          
+        </ul>
+        
+        <div class="d-flex align-items-center">
+          <!-- ← NUEVO: Botón Modo Oscuro/Claro -->
+          <button class="btn btn-sm me-2" 
+                  [class.btn-outline-light]="!darkMode"
+                  [class.btn-warning]="darkMode"
+                  (click)="theme.toggle()">
+            @if (darkMode) {
+              <i class="fa-solid fa-sun"></i> ☀️
+            } @else {
+              <i class="fa-solid fa-moon"></i> 🌙
+            }
+          </button>
+          
+          <span class="text-light me-3 small">
+            <i class="fa-solid fa-id-badge me-1"></i> {{ rolActual }}
+          </span>
+          <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()">
+            <i class="fa-solid fa-right-from-bracket"></i> Salir
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+}

@@ -1,0 +1,12 @@
+<!-- 1. MENÚ ARRIBA -->
+@if (!esLogin()) {
+  <app-menu></app-menu>
+}
+
+<!-- 2. TOAST (notificaciones flotantes) -->
+<app-toast></app-toast>
+
+<!-- 3. CONTENIDO PRINCIPAL -->
+<div class="container mt-4 mb-5">
+  <router-outlet></router-outlet>
+</div>
