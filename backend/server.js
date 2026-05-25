@@ -3,12 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 
+const express = require('express');
+const cors = require('cors');
+const db = require('./db');
 
 const app = express();
-const cors = require('cors');
 
+// CORS - permitir cualquier origen temporalmente
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*'
+    origin: '*'
 }));
 app.use(express.json());
 // Ruta raíz - para que no dé "Cannot GET /"
