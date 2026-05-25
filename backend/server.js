@@ -7,13 +7,14 @@ const db = require('./db');
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Ruta raíz - para que no dé "Cannot GET /"
 app.get('/', (req, res) => {
     res.json({
-        message: 'Bienvenido a Rancho Inteligente API',
+        message: 'API Rancho Inteligente funcionando',
         status: 'OK',
         endpoints: {
             ganado: '/api/ganado',
-            // agrega otros endpoints que tengas
+            ganadoById: '/api/ganado/:id'
         }
     });
 });
