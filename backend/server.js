@@ -5,7 +5,11 @@ const db = require('./db');
 
 
 const app = express();
-app.use(cors());
+const cors = require('cors');
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*'
+}));
 app.use(express.json());
 // Ruta raíz - para que no dé "Cannot GET /"
 app.get('/', (req, res) => {
