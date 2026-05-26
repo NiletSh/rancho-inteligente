@@ -38,12 +38,9 @@ export class RancherosComponent implements OnInit {
 
     request.subscribe({
       next: (result) => {
-        const ranchero = this.normalizar({ id_ranchero: this.editando ? this.ranchForm.id : result.id, ...payload });
-        this.listaRancheros = this.editando
-          ? this.listaRancheros.map((r) => r.id === ranchero.id ? ranchero : r)
-          : [ranchero, ...this.listaRancheros];
         this.editando = false;
         this.limpiar();
+        this.cargarDatos();
       },
       error: (err) => console.error('Error al guardar ranchero:', err),
       complete: () => this.guardando = false

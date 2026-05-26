@@ -40,12 +40,9 @@ export class InventarioComponent implements OnInit {
 
     request.subscribe({
       next: (result) => {
-        const item = this.normalizar({ id_inventario: this.editando ? this.itemForm.id : result.id, ...payload });
-        this.listaInventario = this.editando
-          ? this.listaInventario.map((i) => i.id === item.id ? item : i)
-          : [item, ...this.listaInventario];
         this.editando = false;
         this.limpiar();
+        this.cargarDatos();
       },
       error: (err) => console.error('Error al guardar inventario:', err),
       complete: () => this.guardando = false

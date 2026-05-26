@@ -68,14 +68,10 @@ export class GanadoComponent implements OnInit {
     if (this.editando) {
       this.apiService.actualizarAnimal(this.animalForm.id, animal).subscribe({
         next: () => {
-          const actualizado = this.normalizarAnimal({ id_animal: this.animalForm.id, ...animal });
-          this.listaGanado = this.listaGanado.map((item) =>
-            item.id_animal === actualizado.id_animal ? actualizado : item
-          );
-          this.filtrar();
           this.toast.mostrar('Animal actualizado en la base de datos', 'success');
           this.editando = false;
           this.limpiarFormulario();
+          this.cargarDatos();
         },
         error: (err) => {
           console.error('Error al actualizar animal:', err);

@@ -67,19 +67,10 @@ export class VacunasComponent implements OnInit {
     if (this.editando) {
       this.apiService.actualizarVacuna(this.vacunaForm.id, vacuna).subscribe({
         next: () => {
-          const actualizada = this.normalizarVacuna({
-            id_vacuna: this.vacunaForm.id,
-            ...vacuna,
-            animal_nombre: this.obtenerNombreAnimal(vacuna.id_animal),
-            veterinario_nombre: this.obtenerNombreVeterinario(vacuna.id_veterinario)
-          });
-
-          this.listaVacunas = this.listaVacunas.map((item) =>
-            item.id === actualizada.id ? actualizada : item
-          );
           this.editando = false;
           this.limpiar();
           this.mensajeExito = 'Vacuna actualizada correctamente.';
+          this.cargarDatos();
         },
         error: (err) => {
           console.error('Error al actualizar vacuna:', err);
@@ -96,16 +87,9 @@ export class VacunasComponent implements OnInit {
 
     this.apiService.crearVacuna(vacuna).subscribe({
       next: (result) => {
-        const nueva = this.normalizarVacuna({
-          id_vacuna: result.id,
-          ...vacuna,
-          animal_nombre: this.obtenerNombreAnimal(vacuna.id_animal),
-          veterinario_nombre: this.obtenerNombreVeterinario(vacuna.id_veterinario)
-        });
-
-        this.listaVacunas = [nueva, ...this.listaVacunas];
         this.limpiar();
         this.mensajeExito = 'Vacuna guardada correctamente.';
+        this.cargarDatos();
       },
       error: (err) => {
         console.error('Error al crear vacuna:', err);

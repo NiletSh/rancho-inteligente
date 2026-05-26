@@ -55,16 +55,9 @@ export class AlimentacionComponent implements OnInit {
 
     request.subscribe({
       next: (result) => {
-        const item = this.normalizar({
-          id_alimentacion: this.editando ? this.aliForm.id : result.id,
-          ...payload,
-          animal_nombre: this.nombreAnimal(payload.id_animal)
-        });
-        this.listaAlimentacion = this.editando
-          ? this.listaAlimentacion.map((a) => a.id === item.id ? item : a)
-          : [item, ...this.listaAlimentacion];
         this.editando = false;
         this.limpiar();
+        this.cargarDatos();
       },
       error: (err) => console.error('Error al guardar alimentacion:', err),
       complete: () => this.guardando = false

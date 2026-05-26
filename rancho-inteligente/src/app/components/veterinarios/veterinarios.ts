@@ -39,12 +39,9 @@ export class VeterinariosComponent implements OnInit {
 
     request.subscribe({
       next: (result) => {
-        const vet = this.normalizar({ id_veterinario: this.editando ? this.vetForm.id : result.id, ...payload });
-        this.listaVeterinarios = this.editando
-          ? this.listaVeterinarios.map((v) => v.id === vet.id ? vet : v)
-          : [vet, ...this.listaVeterinarios];
         this.editando = false;
         this.limpiar();
+        this.cargarDatos();
       },
       error: (err) => console.error('Error al guardar veterinario:', err),
       complete: () => this.guardando = false
