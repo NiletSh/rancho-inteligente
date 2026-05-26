@@ -10,7 +10,7 @@ const app = express();
 // ============================================
 
 app.use(cors({
-    origin: 'https://ranchointeligente.netlify.app/'
+    origin: 'https://rancho-inteligente.vercel.app'
 }));
 
 app.use(express.json());
