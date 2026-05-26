@@ -184,6 +184,47 @@ app.get('/api/vacunas', async (req, res) => {
     }
 });
 
+app.post('/api/vacunas', async (req, res) => {
+    try {
+        const { nombre_vacuna, id_animal, id_veterinario, fecha_aplicacion, proxima_dosis, observaciones } = req.body;
+
+        const [result] = await db.query(
+            `INSERT INTO vacuna (nombre_vacuna, id_animal, id_veterinario, fecha_aplicacion, proxima_dosis, observaciones) 
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [nombre_vacuna, id_animal, id_veterinario, fecha_aplicacion, proxima_dosis, observaciones || null]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Vacuna creada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/vacunas/:id', async (req, res) => {
+    try {
+        const { nombre_vacuna, id_animal, id_veterinario, fecha_aplicacion, proxima_dosis, observaciones } = req.body;
+
+        await db.query(
+            `UPDATE vacuna SET nombre_vacuna=?, id_animal=?, id_veterinario=?, fecha_aplicacion=?, proxima_dosis=?, observaciones=? 
+             WHERE id_vacuna=?`,
+            [nombre_vacuna, id_animal, id_veterinario, fecha_aplicacion, proxima_dosis, observaciones || null, req.params.id]
+        );
+
+        res.json({ message: 'Vacuna actualizada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/vacunas/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM vacuna WHERE id_vacuna = ?', [req.params.id]);
+        res.json({ message: 'Vacuna eliminada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ============================================
 // RUTAS DE VETERINARIOS
 // ============================================
@@ -198,6 +239,47 @@ app.get('/api/veterinarios', async (req, res) => {
     }
 });
 
+app.post('/api/veterinarios', async (req, res) => {
+    try {
+        const { nombre_completo, especialidad, telefono, sueldo } = req.body;
+
+        const [result] = await db.query(
+            `INSERT INTO veterinario (nombre_completo, especialidad, telefono, sueldo) 
+             VALUES (?, ?, ?, ?)`,
+            [nombre_completo, especialidad, telefono, sueldo || 0]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Veterinario creado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/veterinarios/:id', async (req, res) => {
+    try {
+        const { nombre_completo, especialidad, telefono, sueldo } = req.body;
+
+        await db.query(
+            `UPDATE veterinario SET nombre_completo=?, especialidad=?, telefono=?, sueldo=? 
+             WHERE id_veterinario=?`,
+            [nombre_completo, especialidad, telefono, sueldo || 0, req.params.id]
+        );
+
+        res.json({ message: 'Veterinario actualizado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/veterinarios/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM veterinario WHERE id_veterinario = ?', [req.params.id]);
+        res.json({ message: 'Veterinario eliminado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ============================================
 // RUTAS DE INVENTARIO
 // ============================================
@@ -207,6 +289,47 @@ app.get('/api/inventario', async (req, res) => {
         const [rows] = await db.query('SELECT * FROM inventario');
         res.json(rows);
 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/inventario', async (req, res) => {
+    try {
+        const { tipo, nombre_item, cantidad, unidad, stock_minimo } = req.body;
+
+        const [result] = await db.query(
+            `INSERT INTO inventario (tipo, nombre_item, cantidad, unidad, stock_minimo) 
+             VALUES (?, ?, ?, ?, ?)`,
+            [tipo, nombre_item, cantidad, unidad, stock_minimo || 10]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Inventario creado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/inventario/:id', async (req, res) => {
+    try {
+        const { tipo, nombre_item, cantidad, unidad, stock_minimo } = req.body;
+
+        await db.query(
+            `UPDATE inventario SET tipo=?, nombre_item=?, cantidad=?, unidad=?, stock_minimo=? 
+             WHERE id_inventario=?`,
+            [tipo, nombre_item, cantidad, unidad, stock_minimo || 10, req.params.id]
+        );
+
+        res.json({ message: 'Inventario actualizado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/inventario/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM inventario WHERE id_inventario = ?', [req.params.id]);
+        res.json({ message: 'Inventario eliminado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -234,6 +357,47 @@ app.get('/api/alimentacion', async (req, res) => {
     }
 });
 
+app.post('/api/alimentacion', async (req, res) => {
+    try {
+        const { id_animal, tipo_alimento, cantidad, fecha } = req.body;
+
+        const [result] = await db.query(
+            `INSERT INTO alimentacion (id_animal, tipo_alimento, cantidad, fecha) 
+             VALUES (?, ?, ?, ?)`,
+            [id_animal, tipo_alimento, cantidad, fecha]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Alimentación registrada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/alimentacion/:id', async (req, res) => {
+    try {
+        const { id_animal, tipo_alimento, cantidad, fecha } = req.body;
+
+        await db.query(
+            `UPDATE alimentacion SET id_animal=?, tipo_alimento=?, cantidad=?, fecha=? 
+             WHERE id_alimentacion=?`,
+            [id_animal, tipo_alimento, cantidad, fecha, req.params.id]
+        );
+
+        res.json({ message: 'Alimentación actualizada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/alimentacion/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM alimentacion WHERE id_alimentacion = ?', [req.params.id]);
+        res.json({ message: 'Alimentación eliminada' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ============================================
 // RUTAS DE RANCHEROS
 // ============================================
@@ -246,6 +410,47 @@ app.get('/api/rancheros', async (req, res) => {
 
         res.json(rows);
 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/rancheros', async (req, res) => {
+    try {
+        const { nombre, ubicacion, telefono, email } = req.body;
+
+        const [result] = await db.query(
+            `INSERT INTO ranchero (nombre, ubicacion, telefono, email) 
+             VALUES (?, ?, ?, ?)`,
+            [nombre, ubicacion, telefono, email]
+        );
+
+        res.status(201).json({ id: result.insertId, message: 'Ranchero creado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/rancheros/:id', async (req, res) => {
+    try {
+        const { nombre, ubicacion, telefono, email } = req.body;
+
+        await db.query(
+            `UPDATE ranchero SET nombre=?, ubicacion=?, telefono=?, email=? 
+             WHERE id_ranchero=?`,
+            [nombre, ubicacion, telefono, email, req.params.id]
+        );
+
+        res.json({ message: 'Ranchero actualizado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/rancheros/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM ranchero WHERE id_ranchero = ?', [req.params.id]);
+        res.json({ message: 'Ranchero eliminado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
