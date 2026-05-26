@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ApiService {
   // Asegúrate de que esté SIN la barra al final
-  private baseUrl = 'https://rancho-inteligente.onrender.com/api'; 
+  private baseUrl = 'https://rancho-inteligente.onrender.com'; 
 
   constructor(private http: HttpClient) { }
 
