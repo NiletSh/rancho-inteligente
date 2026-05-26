@@ -10,7 +10,7 @@ const app = express();
 // ============================================
 
 app.use(cors({
-    origin: 'https://warm-dragon-7861f3.netlify.app'
+    origin: 'https://ranchointeligente.netlify.app/'
 }));
 
 app.use(express.json());
