@@ -359,12 +359,12 @@ app.get('/api/alimentacion', async (req, res) => {
 
 app.post('/api/alimentacion', async (req, res) => {
     try {
-        const { id_animal, tipo_alimento, cantidad, fecha } = req.body;
+        const { id_animal, tipo_alimento, cantidad_kg, horario } = req.body;
 
         const [result] = await db.query(
-            `INSERT INTO alimentacion (id_animal, tipo_alimento, cantidad, fecha) 
+            `INSERT INTO alimentacion (id_animal, tipo_alimento, cantidad_kg, horario) 
              VALUES (?, ?, ?, ?)`,
-            [id_animal, tipo_alimento, cantidad, fecha]
+            [id_animal, tipo_alimento, cantidad_kg, horario]
         );
 
         res.status(201).json({ id: result.insertId, message: 'Alimentación registrada' });
@@ -375,12 +375,12 @@ app.post('/api/alimentacion', async (req, res) => {
 
 app.put('/api/alimentacion/:id', async (req, res) => {
     try {
-        const { id_animal, tipo_alimento, cantidad, fecha } = req.body;
+        const { id_animal, tipo_alimento, cantidad_kg, horario } = req.body;
 
         await db.query(
-            `UPDATE alimentacion SET id_animal=?, tipo_alimento=?, cantidad=?, fecha=? 
+            `UPDATE alimentacion SET id_animal=?, tipo_alimento=?, cantidad_kg=?, horario=? 
              WHERE id_alimentacion=?`,
-            [id_animal, tipo_alimento, cantidad, fecha, req.params.id]
+            [id_animal, tipo_alimento, cantidad_kg, horario, req.params.id]
         );
 
         res.json({ message: 'Alimentación actualizada' });
@@ -417,12 +417,12 @@ app.get('/api/rancheros', async (req, res) => {
 
 app.post('/api/rancheros', async (req, res) => {
     try {
-        const { nombre, ubicacion, telefono, email } = req.body;
+        const { nombre_completo, contacto, direccion_rancho } = req.body;
 
         const [result] = await db.query(
-            `INSERT INTO ranchero (nombre, ubicacion, telefono, email) 
-             VALUES (?, ?, ?, ?)`,
-            [nombre, ubicacion, telefono, email]
+            `INSERT INTO ranchero (nombre_completo, contacto, direccion_rancho) 
+             VALUES (?, ?, ?)`,
+            [nombre_completo, contacto, direccion_rancho]
         );
 
         res.status(201).json({ id: result.insertId, message: 'Ranchero creado' });
@@ -433,12 +433,12 @@ app.post('/api/rancheros', async (req, res) => {
 
 app.put('/api/rancheros/:id', async (req, res) => {
     try {
-        const { nombre, ubicacion, telefono, email } = req.body;
+        const { nombre_completo, contacto, direccion_rancho } = req.body;
 
         await db.query(
-            `UPDATE ranchero SET nombre=?, ubicacion=?, telefono=?, email=? 
+            `UPDATE ranchero SET nombre_completo=?, contacto=?, direccion_rancho=? 
              WHERE id_ranchero=?`,
-            [nombre, ubicacion, telefono, email, req.params.id]
+            [nombre_completo, contacto, direccion_rancho, req.params.id]
         );
 
         res.json({ message: 'Ranchero actualizado' });
