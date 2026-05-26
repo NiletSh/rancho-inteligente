@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://rancho-inteligente.onrender.com';
+  private baseUrl = 'https://rancho-inteligente.onrender.com/api';
 
   // ========== GANADO ==========
   getGanado(): Observable<any[]> {

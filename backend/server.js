@@ -9,8 +9,9 @@ const app = express();
 // CONFIGURACION
 // ============================================
 
+const allowedOrigin = process.env.CORS_ORIGIN || '*';
 app.use(cors({
-    origin: 'https://rancho-inteligente.vercel.app'
+    origin: allowedOrigin === '*' ? true : allowedOrigin
 }));
 
 app.use(express.json());
