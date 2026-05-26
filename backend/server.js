@@ -11,7 +11,7 @@ const app = express();
 
 // CORS - permitir cualquier origen temporalmente
 app.use(cors({
-    origin: 'https://warm-dragon-7861f3.netlify.app'
+    origin: 'https://warm-dragon-7861f3.netlify.app/dashboard'
 }));
 app.use(express.json());
 // Ruta raíz - para que no dé "Cannot GET /"
