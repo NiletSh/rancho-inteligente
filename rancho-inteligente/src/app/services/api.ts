@@ -7,7 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://rancho-inteligente.onrender.com/api';
+  private baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : '/api';
+
+  // En el servidor, se asume que el backend está disponible en la misma origin bajo /api.
+  // Para desarrollo local, usamos localhost:3000.
 
   // ========== GANADO ==========
   getGanado(): Observable<any[]> {

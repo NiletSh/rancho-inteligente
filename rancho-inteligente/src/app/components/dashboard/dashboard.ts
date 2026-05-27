@@ -222,7 +222,7 @@ export class DashboardComponent implements OnInit {
   private manejarErrorApi(err: any) {
     console.error('Error al cargar dashboard:', err);
     this.errorCarga = err.status === 0
-      ? 'No se pudo conectar con el backend en localhost:3000.'
+      ? 'No se pudo conectar con el backend. Revisa que el servidor esté activo.'
       : 'No se pudieron cargar todos los datos del dashboard.';
 
     return of([]);
