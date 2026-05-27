@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, of } from 'rxjs';
-import { catchError, finalize, timeout } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../services/api';
 import { DataService } from '../../services/data';
 import jsPDF from 'jspdf';
@@ -61,15 +61,12 @@ export class DashboardComponent implements OnInit {
     this.errorCarga = '';
 
     forkJoin({
-      ganado: this.apiService.getGanado().pipe(timeout(10000), catchError((err) => this.manejarErrorApi(err))),
-      vacunas: this.apiService.getVacunas().pipe(timeout(10000), catchError((err) => this.manejarErrorApi(err))),
-      veterinarios: this.apiService.getVeterinarios().pipe(timeout(10000), catchError((err) => this.manejarErrorApi(err))),
-      inventario: this.apiService.getInventario().pipe(timeout(10000), catchError((err) => this.manejarErrorApi(err)))
-    }).pipe(finalize(() => {
-      this.cargando = false;
-    })).subscribe({
-      next: ({ ganado, vacunas, veterinarios, inventario }) => {
-        const animales = ganado.map((animal: any) => this.normalizarAnimal(animal));
+      ganado: this.apiService.getGanado().pipe(catchError((err) => this.manejarErrorApi(err))),
+      vacunas: this.apiService.getVacunas().pipe(catchError((err) => this.manejarErrorApi(err))),
+      veterinarios: this.apiService.getVeterinarios().pipe(catchError((err) => this.manejarErrorApi(err))),
+      inventario: this.apiService.getInventario().pipe(catchError((err) => this.manejarErrorApi(err)))
+    }).subscribe(({ ganado, vacunas, veterinarios, inventario }) => {
+      const animales = ganado.map((animal: any) => this.normalizarAnimal(animal));
 
       this.stats = {
         totalAnimales: animales.length,
@@ -82,13 +79,7 @@ export class DashboardComponent implements OnInit {
       this.actualizarGraficaGanado(animales);
       this.actualizarGraficaVacunas(vacunas);
       this.proximasVacunas = this.obtenerProximasVacunas(vacunas);
-    },
-    error: (err) => {
-      console.error('Error al cargar dashboard:', err);
-      this.errorCarga = err.status === 0
-        ? 'No se pudo conectar con el backend. Revisa que el servidor esté activo.'
-        : 'No se pudieron cargar todos los datos del dashboard.';
-    }
+      this.cargando = false;
     });
   }
 
