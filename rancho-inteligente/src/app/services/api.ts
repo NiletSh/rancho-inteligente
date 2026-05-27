@@ -11,6 +11,10 @@ export class ApiService {
     ? 'http://localhost:3000/api'
     : 'https://rancho-inteligente.onrender.com/api';
 
+  constructor() {
+    console.debug('ApiService selected baseUrl:', this.baseUrl);
+  }
+
   // En producción (Vercel) usamos el backend desplegado en rancho-inteligente.onrender.com.
   // En desarrollo local usamos localhost:3000.
 
