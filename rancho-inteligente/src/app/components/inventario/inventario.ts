@@ -10,6 +10,7 @@ import { ApiService } from '../../services/api';
 })
 export class InventarioComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   listaInventario: any[] = [];
   itemForm = this.formVacio();
   editando = false;

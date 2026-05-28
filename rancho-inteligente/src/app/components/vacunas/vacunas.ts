@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api';
@@ -11,6 +11,7 @@ import { ApiService } from '../../services/api';
 })
 export class VacunasComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
 
   listaVacunas: any[] = [];
   listaGanado: any[] = [];
@@ -40,10 +41,12 @@ export class VacunasComponent implements OnInit {
         this.listaGanado = ganado;
         this.listaVeterinarios = veterinarios;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar vacunas:', err);
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -127,6 +130,7 @@ export class VacunasComponent implements OnInit {
       this.apiService.eliminarVacuna(id).subscribe({
         next: () => {
           this.listaVacunas = this.listaVacunas.filter((vacuna) => vacuna.id !== id);
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Error al eliminar vacuna:', err)
       });

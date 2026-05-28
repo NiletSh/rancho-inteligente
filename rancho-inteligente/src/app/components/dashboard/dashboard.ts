@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, of } from 'rxjs';
@@ -18,6 +18,7 @@ import autoTable from 'jspdf-autotable';
 export class DashboardComponent implements OnInit {
   private apiService = inject(ApiService);
   private dataService = inject(DataService);
+  private cdr = inject(ChangeDetectorRef);
 
   stats: any = {
     totalAnimales: 0,
@@ -80,6 +81,7 @@ export class DashboardComponent implements OnInit {
       this.actualizarGraficaVacunas(vacunas);
       this.proximasVacunas = this.obtenerProximasVacunas(vacunas);
       this.cargando = false;
+      this.cdr.detectChanges();
     });
   }
 

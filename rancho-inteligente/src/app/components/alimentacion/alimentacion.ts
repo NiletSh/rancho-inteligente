@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api';
@@ -77,7 +77,7 @@ export class AlimentacionComponent implements OnInit {
   eliminar(id: number) {
     if (confirm('Seguro de eliminar este registro?')) {
       this.apiService.eliminarAlimentacion(id).subscribe({
-        next: () => this.listaAlimentacion = this.listaAlimentacion.filter((a) => a.id !== id),
+        next: () => { this.listaAlimentacion = this.listaAlimentacion.filter((a) => a.id !== id); this.cdr.detectChanges(); },
         error: (err) => console.error('Error al eliminar alimentacion:', err)
       });
     }
