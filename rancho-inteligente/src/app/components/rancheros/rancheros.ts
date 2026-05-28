@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 
@@ -10,17 +10,28 @@ import { ApiService } from '../../services/api';
 })
 export class RancherosComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   listaRancheros: any[] = [];
   ranchForm = this.formVacio();
   editando = false;
   guardando = false;
+  cargando = true;
 
   ngOnInit() { this.cargarDatos(); }
 
   cargarDatos() {
+    this.cargando = true;
     this.apiService.getRancheros().subscribe({
-      next: (data) => this.listaRancheros = data.map((r: any) => this.normalizar(r)),
-      error: (err) => console.error('Error al cargar rancheros:', err)
+      next: (data) => {
+        this.listaRancheros = data.map((r: any) => this.normalizar(r));
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar rancheros:', err);
+        this.cargando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

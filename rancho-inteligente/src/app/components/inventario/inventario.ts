@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 import jsPDF from 'jspdf';
@@ -13,17 +13,28 @@ import autoTable from 'jspdf-autotable';
 })
 export class InventarioComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   listaInventario: any[] = [];
   itemForm = this.formVacio();
   editando = false;
   guardando = false;
+  cargando = true;
 
   ngOnInit() { this.cargarDatos(); }
 
   cargarDatos() {
+    this.cargando = true;
     this.apiService.getInventario().subscribe({
-      next: (data) => this.listaInventario = data.map((i: any) => this.normalizar(i)),
-      error: (err) => console.error('Error al cargar inventario:', err)
+      next: (data) => {
+        this.listaInventario = data.map((i: any) => this.normalizar(i));
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar inventario:', err);
+        this.cargando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

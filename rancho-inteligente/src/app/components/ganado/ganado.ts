@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 import { ToastService } from '../../services/toast';
@@ -13,6 +13,7 @@ import { ToastService } from '../../services/toast';
 export class GanadoComponent implements OnInit {
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
+  private cdr = inject(ChangeDetectorRef);
 
   listaGanado: any[] = [];
   listaGanadoFiltrada: any[] = [];
@@ -35,11 +36,13 @@ export class GanadoComponent implements OnInit {
         this.listaGanado = data.map((item: any) => this.normalizarAnimal(item));
         this.filtrar();
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar ganado:', err);
         this.toast.mostrar('Error al cargar datos de la API', 'error');
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

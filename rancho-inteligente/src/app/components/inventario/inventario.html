@@ -61,37 +61,46 @@
 
 <!-- Cards -->
 <div class="row">
-  @for (item of listaInventario; track item.id) {
-    <div class="col-md-4 mb-3">
-      <div class="card shadow-sm h-100 border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <span class="badge bg-{{ getColor(item.tipo) }} mb-2">
-                <i class="fa-solid {{ getIcon(item.tipo) }}"></i> {{ item.tipo }}
-              </span>
-              <h5 class="card-title">{{ item.nombre }}</h5>
-            </div>
-            <h3 class="text-primary fw-bold">{{ item.cantidad }}</h3>
-          </div>
-          <p class="text-muted mb-0">{{ item.unidad }} en stock</p>
-        </div>
-        <div class="card-footer bg-white border-0 text-end">
-          <button class="btn btn-warning btn-sm me-1" (click)="editar(item)">
-            <i class="fa-solid fa-pen"></i>
-          </button>
-          <button class="btn btn-danger btn-sm" (click)="eliminar(item.id)">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  } @empty {
+  @if (cargando) {
     <div class="col-12">
-      <div class="alert alert-warning text-center">
-        <i class="fa-solid fa-box-open fa-2x mb-2"></i><br>
-        El inventario está vacío
+      <div class="alert alert-info text-center">
+        <i class="fa-solid fa-spinner fa-spin me-2"></i>
+        Cargando inventario...
       </div>
     </div>
+  } @else {
+    @for (item of listaInventario; track item.id) {
+      <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <span class="badge bg-{{ getColor(item.tipo) }} mb-2">
+                  <i class="fa-solid {{ getIcon(item.tipo) }}"></i> {{ item.tipo }}
+                </span>
+                <h5 class="card-title">{{ item.nombre }}</h5>
+              </div>
+              <h3 class="text-primary fw-bold">{{ item.cantidad }}</h3>
+            </div>
+            <p class="text-muted mb-0">{{ item.unidad }} en stock</p>
+          </div>
+          <div class="card-footer bg-white border-0 text-end">
+            <button class="btn btn-warning btn-sm me-1" (click)="editar(item)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="eliminar(item.id)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="col-12">
+        <div class="alert alert-warning text-center">
+          <i class="fa-solid fa-box-open fa-2x mb-2"></i><br>
+          El inventario está vacío
+        </div>
+      </div>
+    }
   }
 </div>

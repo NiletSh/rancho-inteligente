@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api';
@@ -11,6 +11,7 @@ import { ApiService } from '../../services/api';
 })
 export class AlimentacionComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
 
   listaAlimentacion: any[] = [];
   listaGanado: any[] = [];
@@ -31,10 +32,12 @@ export class AlimentacionComponent implements OnInit {
         this.listaAlimentacion = alimentacion.map((a: any) => this.normalizar(a));
         this.listaGanado = ganado;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar alimentacion:', err);
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

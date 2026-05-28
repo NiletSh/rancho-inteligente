@@ -58,31 +58,40 @@
       </tr>
     </thead>
     <tbody>
-      @for (vet of listaVeterinarios; track vet.id) {
-        <tr>
-          <td>{{ vet.id }}</td>
-          <td class="fw-bold">{{ vet.nombre }}</td>
-          <td>{{ vet.telefono }}</td>
-          <td><span class="badge bg-info">{{ vet.especialidad }}</span></td>
-          <td [class.text-success]="vet.sueldo > 25000" [class.fw-bold]="vet.sueldo > 25000">
-          ${{ vet.sueldo }}
-          </td>
-          <td>
-            <button class="btn btn-warning btn-sm me-1" (click)="editar(vet)">
-              <i class="fa-solid fa-pen"></i>
-            </button>
-            <button class="btn btn-danger btn-sm" (click)="eliminar(vet.id)">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      } @empty {
+      @if (cargando) {
         <tr>
           <td colspan="6" class="text-center text-muted py-3">
-            <i class="fa-solid fa-inbox fa-2x mb-2"></i><br>
-            No hay veterinarios registrados
+            <i class="fa-solid fa-spinner fa-spin me-2"></i>
+            Cargando veterinarios...
           </td>
         </tr>
+      } @else {
+        @for (vet of listaVeterinarios; track vet.id) {
+          <tr>
+            <td>{{ vet.id }}</td>
+            <td class="fw-bold">{{ vet.nombre }}</td>
+            <td>{{ vet.telefono }}</td>
+            <td><span class="badge bg-info">{{ vet.especialidad }}</span></td>
+            <td [class.text-success]="vet.sueldo > 25000" [class.fw-bold]="vet.sueldo > 25000">
+            ${{ vet.sueldo }}
+            </td>
+            <td>
+              <button class="btn btn-warning btn-sm me-1" (click)="editar(vet)">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="eliminar(vet.id)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="text-center text-muted py-3">
+              <i class="fa-solid fa-inbox fa-2x mb-2"></i><br>
+              No hay veterinarios registrados
+            </td>
+          </tr>
+        }
       }
     </tbody>
   </table>

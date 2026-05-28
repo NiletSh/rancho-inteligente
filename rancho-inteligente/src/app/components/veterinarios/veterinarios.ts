@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 
@@ -10,17 +10,28 @@ import { ApiService } from '../../services/api';
 })
 export class VeterinariosComponent implements OnInit {
   private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
   listaVeterinarios: any[] = [];
   vetForm = this.formVacio();
   editando = false;
   guardando = false;
+  cargando = true;
 
   ngOnInit() { this.cargarDatos(); }
 
   cargarDatos() {
+    this.cargando = true;
     this.apiService.getVeterinarios().subscribe({
-      next: (data) => this.listaVeterinarios = data.map((v: any) => this.normalizar(v)),
-      error: (err) => console.error('Error al cargar veterinarios:', err)
+      next: (data) => {
+        this.listaVeterinarios = data.map((v: any) => this.normalizar(v));
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar veterinarios:', err);
+        this.cargando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
