@@ -1,6 +1,14 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2><i class="fa-solid fa-boxes-stacked"></i> Inventario del Rancho</h2>
-  <span class="badge bg-dark fs-5">Total: {{ listaInventario.length }}</span>
+  <div>
+    <h2><i class="fa-solid fa-boxes-stacked"></i> Inventario del Rancho</h2>
+    <p class="text-muted mb-0">Gestión de los artículos en stock</p>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-dark fs-5">Total: {{ listaInventario.length }}</span>
+    <button class="btn btn-danger btn-sm" (click)="descargarPDF()">
+      <i class="fa-solid fa-file-pdf me-2"></i> Descargar PDF
+    </button>
+  </div>
 </div>
 
 <!-- Formulario -->

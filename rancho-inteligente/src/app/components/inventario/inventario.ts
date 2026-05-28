@@ -1,8 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
+
   selector: 'app-inventario',
   standalone: true,
   imports: [FormsModule],
@@ -22,6 +25,33 @@ export class InventarioComponent implements OnInit {
       next: (data) => this.listaInventario = data.map((i: any) => this.normalizar(i)),
       error: (err) => console.error('Error al cargar inventario:', err)
     });
+  }
+
+  descargarPDF() {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.setTextColor(45, 80, 22);
+    doc.text('Rancho Inteligente', 14, 20);
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Reporte de Inventario - ' + new Date().toLocaleDateString(), 14, 28);
+
+    const datos = this.listaInventario.map((item: any) => [
+      item.id,
+      item.tipo,
+      item.nombre,
+      item.cantidad + ' ' + item.unidad
+    ]);
+
+    autoTable(doc, {
+      startY: 35,
+      head: [['ID', 'Tipo', 'Nombre', 'Cantidad']],
+      body: datos,
+      theme: 'grid',
+      headStyles: { fillColor: [45, 80, 22], textColor: [255, 255, 255] }
+    });
+
+    doc.save('Inventario_Rancho_Inteligente.pdf');
   }
 
   guardar() {

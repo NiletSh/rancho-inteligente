@@ -5,8 +5,6 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../services/api';
 import { DataService } from '../../services/data';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-dashboard',
@@ -116,31 +114,6 @@ export class DashboardComponent implements OnInit {
 
   esVacunaProgramada(fecha: string): boolean {
     return this.diasHasta(fecha) > 30;
-  }
-
-  descargarPDF() {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.setTextColor(45, 80, 22);
-    doc.text('Rancho Inteligente', 14, 20);
-    doc.setFontSize(12);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Reporte de Inventario - ' + new Date().toLocaleDateString(), 14, 28);
-
-    const inventario = this.dataService.getInventario();
-    const datos = inventario.map((item: any) => [
-      item.id, item.tipo, item.nombre, item.cantidad + ' ' + item.unidad
-    ]);
-
-    autoTable(doc, {
-      startY: 35,
-      head: [['ID', 'Tipo', 'Nombre', 'Cantidad']],
-      body: datos,
-      theme: 'grid',
-      headStyles: { fillColor: [45, 80, 22], textColor: [255, 255, 255] }
-    });
-
-    doc.save('Inventario_Rancho_Inteligente.pdf');
   }
 
   private actualizarGraficaGanado(animales: any[]) {
