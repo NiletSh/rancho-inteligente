@@ -4,7 +4,6 @@ import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../services/api';
-import { DataService } from '../../services/data';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +14,6 @@ import { DataService } from '../../services/data';
 })
 export class DashboardComponent implements OnInit {
   private apiService = inject(ApiService);
-  private dataService = inject(DataService);
   private cdr = inject(ChangeDetectorRef);
 
   stats: any = {
